@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/ilario-pierbattista/parallel-phpunit-executor/internal/balancer"
 	"github.com/ilario-pierbattista/parallel-phpunit-executor/internal/phpunitconf"
@@ -46,5 +47,6 @@ func main() {
 
 	fmt.Println("Number of chunks:", len(chunks))
 
-	phpunitconf.Parse()
+	_, err = phpunitconf.Parse(strings.TrimLeft(phpunitConfig, "="))
+	fmt.Println(err)
 }
