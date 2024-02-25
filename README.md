@@ -1,5 +1,9 @@
 [![codecov](https://codecov.io/github/ilario-pierbattista/parallel-phpunit-executor/graph/badge.svg?token=HWZJAdwnhX)](https://codecov.io/github/ilario-pierbattista/parallel-phpunit-executor)
 
+# What is that thing for
+
+Provide a dramatically fast and memory safe way to execute phpunit tests in parallel.
+
 # Desidered workflow
 
 - given a folder and a batch size, split the test files in chunks. 
