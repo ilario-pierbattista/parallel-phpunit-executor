@@ -5,17 +5,18 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+
+	"github.com/ilario-pierbattista/parallel-phpunit-executor/internal/common"
 )
 
-type Chunks []Chunk
-
-type Chunk struct {
-	files []string
+type chunkWithCounter struct {
+	common.Chunk
+	size int
 }
 
 // TODO a lot can be done to improve error handling. Must learn how.
 
-func MakeChunks(rootPath string, batchSize int) (Chunks, error) {
+func MakeChunks(rootPath string, batchSize int) (common.Chunks, error) {
 	var files []string
 
 	if batchSize < 1 {
@@ -60,13 +61,8 @@ func MakeChunks(rootPath string, batchSize int) (Chunks, error) {
 	return divide(files, batchSize), nil
 }
 
-type chunkWithCounter struct {
-	Chunk
-	size int
-}
-
-func divide(files []string, batchSize int) Chunks {
-	chunks := Chunks{}
+func divide(files []string, batchSize int) common.Chunks {
+	chunks := common.Chunks{}
 	lastChunk := initChunkWithCounter()
 
 	for _, f := range files {
@@ -74,7 +70,7 @@ func divide(files []string, batchSize int) Chunks {
 			swapChunks(&chunks, &lastChunk)
 		}
 
-		lastChunk.files = append(lastChunk.files, f)
+		lastChunk.Files = append(lastChunk.Files, f)
 		lastChunk.size++
 	}
 
@@ -85,8 +81,8 @@ func divide(files []string, batchSize int) Chunks {
 	return chunks
 }
 
-func swapChunks(chunks *Chunks, currentChunk *chunkWithCounter) {
-	*chunks = append(*chunks, Chunk{files: currentChunk.files})
+func swapChunks(chunks *common.Chunks, currentChunk *chunkWithCounter) {
+	*chunks = append(*chunks, common.MakeChunk(&currentChunk.Files))
 	*currentChunk = initChunkWithCounter()
 }
 
