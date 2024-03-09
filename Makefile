@@ -7,3 +7,6 @@ test:
 
 view-coverage:
 	go tool cover -html coverage.out 
+
+depgraph:
+	godepgraph ./cmd/ppe/ | dot -Tpdf -o depgraph.pdf
